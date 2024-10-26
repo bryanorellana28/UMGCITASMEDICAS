@@ -1,0 +1,17 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "mysql" // O el proveedor que estés utilizando
+  url      = env("DATABASE_URL") // Asegúrate de que esta variable esté en tu .env
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String   // Agregar el campo de rol
+}
