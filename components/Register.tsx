@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'; // Importar useRouter
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('Cliente'); // Default role
+  const [role, setRole] = useState('Paciente'); // Default role
   const router = useRouter(); // Inicializar useRouter
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -53,9 +53,9 @@ const Register = () => {
           onChange={(e) => setRole(e.target.value)}
           className="mb-4 p-2 border rounded w-full"
         >
-          <option value="Cliente">Cliente</option>
+          <option value="Paciente">Paciente</option>
        
-          <option value="Administrador">Administrador</option>
+          <option value="Medico">Medico</option>
         </select>
         <button type="submit" className="w-full bg-green-500 text-white p-2 rounded">
           Registrarse
