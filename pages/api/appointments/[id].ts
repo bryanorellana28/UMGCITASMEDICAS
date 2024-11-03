@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 const appointmentHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
 
+  // Validar ID de cita
   if (!id || typeof id !== 'string') {
     return res.status(400).json({ message: 'Invalid appointment ID' });
   }
@@ -24,15 +25,26 @@ const appointmentHandler = async (req: NextApiRequest, res: NextApiResponse) => 
       }
 
     case 'PUT':
-      const { fecha } = req.body;
-      if (!fecha) {
-        return res.status(400).json({ message: 'Fecha es requerida' });
+      const { estado, doctorAsignado } = req.body; // quitar 'fecha' si no es necesario
+
+      // Validar datos entrantes
+      if (!estado) {
+        return res.status(400).json({ message: 'Estado es requerido' });
+      }
+
+      if (estado === 'asignado' && !doctorAsignado) {
+        return res.status(400).json({ message: 'Doctor asignado es requerido' });
+      }
+
+      const updateData: any = { estado }; // No necesitamos re-asignar estado si ya lo tenemos
+      if (doctorAsignado) {
+        updateData.doctorAsignado = doctorAsignado; // Solo asignar si está presente
       }
 
       try {
         const updatedAppointment = await prisma.cita.update({
           where: { id: Number(id) },
-          data: { fecha: new Date(fecha) },
+          data: updateData,
         });
         return res.status(200).json(updatedAppointment);
       } catch (error) {

@@ -21,8 +21,16 @@ const userAppointmentsHandler = async (req: NextApiRequest, res: NextApiResponse
       const decoded: any = jwt.verify(token, secret); // Decodificar el token
       const email = decoded.email; // Obtener el correo del payload del JWT
 
-      // Usar consulta SQL cruda para obtener las citas
-      const appointments = await prisma.$queryRaw`SELECT * FROM Cita WHERE email = ${email}`;
+      // Usar Prisma para obtener las citas
+      const appointments = await prisma.cita.findMany({
+        where: {
+          OR: [
+            { estado: 'asignado', doctorAsignado: email },
+            { estado: 'pendiente' },
+            { estado: 'finalizado', doctorAsignado: email },
+          ],
+        },
+      });
 
       return res.status(200).json(appointments);
     } catch (error) {
