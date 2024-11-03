@@ -5,10 +5,13 @@ import { useRouter } from 'next/router';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // Estado para manejar errores
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(''); // Limpiar errores anteriores
+
     const response = await fetch('/api/login', {
       method: 'POST',
       headers: {
@@ -18,14 +21,12 @@ const Login = () => {
     });
 
     if (response.ok) {
-      // Manejar el almacenamiento del token JWT aquí si es necesario
       const { token } = await response.json();
       localStorage.setItem('token', token); // Almacenar el token en localStorage
       router.push('/dashboard'); // Redirigir al dashboard
     } else {
-      // Manejar errores (por ejemplo, mostrar un mensaje al usuario)
       const errorData = await response.json();
-      alert(errorData.message || 'Error al iniciar sesión');
+      setError(errorData.message || 'Error al iniciar sesión'); // Establecer mensaje de error
     }
   };
 
@@ -43,12 +44,13 @@ const Login = () => {
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="mb-4 p-2 border rounded w-full"
           required
         />
+        {error && <p className="text-red-500 mb-4">{error}</p>} {/* Mostrar mensaje de error */}
         <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded mb-4">
           Iniciar Sesión
         </button>
