@@ -4,14 +4,21 @@ import Sidebar from '../components/Sidebar';
 const VerCitas = () => {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
   useEffect(() => {
+    // Extraer el correo del JWT
+    if (token) {
+      const decoded = JSON.parse(atob(token.split('.')[1]));
+      setUserEmail(decoded.email);
+    }
+
     const fetchAppointments = async () => {
-      const token = localStorage.getItem('token');
       const response = await fetch('/api/user-appointments', {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -25,18 +32,23 @@ const VerCitas = () => {
     };
 
     fetchAppointments();
-  }, []);
+  }, [token]);
 
-  const citasAsignadas = appointments.filter(app => app.estado === 'asignado');
-  const citasPendientes = appointments.filter(app => app.estado === 'pendiente');
-  const citasFinalizadas = appointments.filter(app => app.estado === 'finalizado');
+  // Filtrado de citas según estado y email
+  const citasAsignadas = appointments.filter(
+    (app) => app.estado === 'asignado' && app.email === userEmail
+  );
+  const citasPendientes = appointments.filter(
+    (app) => app.estado === 'pendiente' && app.email === userEmail
+  );
+  const citasFinalizadas = appointments.filter(
+    (app) => app.estado === 'finalizado' && app.email === userEmail
+  );
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <Sidebar userRole="Paciente" email="example@domain.com" />
+      <Sidebar userRole="Paciente" email={userEmail} />
 
-      {/* Contenido principal */}
       <div className="flex-1 p-6">
         <h2 className="mb-6 text-2xl font-bold text-gray-700">Mis Citas</h2>
         {error && <p className="text-red-500">{error}</p>}
@@ -55,21 +67,7 @@ const VerCitas = () => {
                   </h4>
                   <p className="mt-1 text-gray-600"><strong>Hora:</strong> {appointment.hora}</p>
                   <p className="mt-1 text-gray-600"><strong>Descripción:</strong> {appointment.descripcion}</p>
-                  <p className="mt-1 text-gray-600"><strong>Doctor asignado:</strong> {appointment.doctorAsignado}</p>
-                  <div className="flex space-x-2 mt-4">
-                    <button
-                      onClick={() => handleEdit(appointment.id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded"
-                    >
-                      Editar Fecha
-                    </button>
-                    <button
-                      onClick={() => handleDelete(appointment.id)}
-                      className="bg-red-500 text-white px-4 py-2 rounded"
-                    >
-                      Cancelar Cita
-                    </button>
-                  </div>
+                  <p className="mt-1 text-gray-600"><strong>Estado:</strong> Asignado</p>
                 </div>
               ))}
             </div>

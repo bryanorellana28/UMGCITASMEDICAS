@@ -6,13 +6,14 @@ const VerCitasDoctor = () => {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [resolucion, setResolucion] = useState<{ [key: number]: string }>({});
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
   useEffect(() => {
     // Extraer el correo del JWT
     if (token) {
       const decoded = JSON.parse(atob(token.split('.')[1]));
-      setUserEmail(decoded.email); // Asumiendo que el token tiene el campo 'email'
+      setUserEmail(decoded.email);
     }
 
     const fetchAppointments = async () => {
@@ -37,8 +38,6 @@ const VerCitasDoctor = () => {
 
   const handleAssign = async (id: number) => {
     const token = localStorage.getItem('token');
-    if (!token) return; // Asegúrate de tener el token
-  
     const response = await fetch(`/api/appointments/${id}`, {
       method: 'PUT',
       headers: {
@@ -47,14 +46,41 @@ const VerCitasDoctor = () => {
       },
       body: JSON.stringify({ estado: 'asignado', doctorAsignado: userEmail }),
     });
-  
+
     if (response.ok) {
-      const updatedAppointment = await response.json();
-      // Actualiza la lista de citas para reflejar el cambio
-      setAppointments((prev) => prev.map((appointment) => (appointment.id === id ? updatedAppointment : appointment)));
+      const updatedAppointments = await response.json();
+      setAppointments((prev) =>
+        prev.map((appointment) => (appointment.id === id ? updatedAppointments : appointment))
+      );
     } else {
       const errorData = await response.json();
       setError(errorData.message || 'Error al asignar la cita');
+    }
+  };
+
+  const handleFinalize = async (id: number) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`/api/appointments/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        estado: 'finalizado',
+        resolucion: resolucion[id],
+      }),
+    });
+
+    if (response.ok) {
+      const updatedAppointments = await response.json();
+      setAppointments((prev) =>
+        prev.map((appointment) => (appointment.id === id ? updatedAppointments : appointment))
+      );
+      setResolucion((prev) => ({ ...prev, [id]: '' })); // Limpiar el campo de resolución
+    } else {
+      const errorData = await response.json();
+      setError(errorData.message || 'Error al finalizar la cita');
     }
   };
 
@@ -83,8 +109,14 @@ const VerCitasDoctor = () => {
                   <p className="mt-1 text-gray-600"><strong>Hora:</strong> {appointment.hora}</p>
                   <p className="mt-1 text-gray-600"><strong>Descripción:</strong> {appointment.descripcion}</p>
                   <p className="mt-1 text-gray-600"><strong>Doctor asignado:</strong> {appointment.doctorAsignado}</p>
-                  {/* Botón para asignar la cita */}
-                  <button className="mt-2 bg-blue-500 text-white rounded px-4 py-2" onClick={() => handleAssign(appointment.id)}>Asignar</button>
+                  {/* Textbox para resolución */}
+                  <textarea
+                    className="mt-2 p-2 border rounded w-full"
+                    placeholder="Resolución de la cita..."
+                    value={resolucion[appointment.id] || ''}
+                    onChange={(e) => setResolucion({ ...resolucion, [appointment.id]: e.target.value })}
+                  />
+                  <button className="mt-2 bg-green-500 text-white rounded px-4 py-2" onClick={() => handleFinalize(appointment.id)}>Finalizar</button>
                 </div>
               ))}
             </div>

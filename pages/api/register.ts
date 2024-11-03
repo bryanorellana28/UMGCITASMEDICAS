@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 const registerHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    const { email, password, role } = req.body; // Desestructurar el rol
+    const { nombre, email, password, role } = req.body; // Desestructurar el nombre
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
 
@@ -17,7 +17,7 @@ const registerHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await prisma.user.create({
-      data: { email, password: hashedPassword, role }, // Guardar el rol
+      data: { nombre, email, password: hashedPassword, role }, // Guardar el nombre
     });
 
     return res.status(201).json(newUser);
