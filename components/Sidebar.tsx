@@ -47,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userRole, email }) => {
             </li>
             <li>
               <button
-                onClick={() => handleNavigation('/view-appointment')}
+                onClick={() => handleNavigation('/ver-citas')}
                 className="w-full text-left p-2 hover:bg-gray-300 rounded transition-colors duration-200"
               >
                 Ver Cita
