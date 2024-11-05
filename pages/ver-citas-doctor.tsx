@@ -17,7 +17,7 @@ const VerCitasDoctor = () => {
     }
 
     const fetchAppointments = async () => {
-      const response = await fetch('/api/user-appointments', {
+      const response = await fetch('/api/doctor-appointments', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -84,9 +84,15 @@ const VerCitasDoctor = () => {
     }
   };
 
-  const citasAsignadas = appointments.filter(app => app.estado === 'asignado' && app.doctorAsignado === userEmail);
-  const citasPendientes = appointments.filter(app => app.estado === 'pendiente');
-  const citasFinalizadas = appointments.filter(app => app.estado === 'finalizado' && app.doctorAsignado === userEmail);
+  const citasAsignadas = appointments.filter(
+    app => app.estado === 'asignado' && app.doctorAsignado === userEmail
+  );
+  const citasPendientes = appointments.filter(
+    app => app.estado === 'pendiente'
+  );
+  const citasFinalizadas = appointments.filter(
+    app => app.estado === 'finalizado' && app.doctorAsignado === userEmail
+  );
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -105,18 +111,24 @@ const VerCitasDoctor = () => {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {citasAsignadas.map((appointment) => (
                 <div key={appointment.id} className="bg-white shadow-md rounded-lg p-4">
-                  <h4 className="text-lg font-semibold text-blue-600">{new Date(appointment.fecha).toLocaleDateString()}</h4>
+                  <h4 className="text-lg font-semibold text-blue-600">
+                    {new Date(appointment.fecha).toLocaleDateString()}
+                  </h4>
                   <p className="mt-1 text-gray-600"><strong>Hora:</strong> {appointment.hora}</p>
                   <p className="mt-1 text-gray-600"><strong>Descripción:</strong> {appointment.descripcion}</p>
                   <p className="mt-1 text-gray-600"><strong>Doctor asignado:</strong> {appointment.doctorAsignado}</p>
-                  {/* Textbox para resolución */}
                   <textarea
                     className="mt-2 p-2 border rounded w-full"
                     placeholder="Resolución de la cita..."
                     value={resolucion[appointment.id] || ''}
                     onChange={(e) => setResolucion({ ...resolucion, [appointment.id]: e.target.value })}
                   />
-                  <button className="mt-2 bg-green-500 text-white rounded px-4 py-2" onClick={() => handleFinalize(appointment.id)}>Finalizar</button>
+                  <button
+                    className="mt-2 bg-green-500 text-white rounded px-4 py-2"
+                    onClick={() => handleFinalize(appointment.id)}
+                  >
+                    Finalizar
+                  </button>
                 </div>
               ))}
             </div>
@@ -132,10 +144,17 @@ const VerCitasDoctor = () => {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {citasPendientes.map((appointment) => (
                 <div key={appointment.id} className="bg-white shadow-md rounded-lg p-4">
-                  <h4 className="text-lg font-semibold text-blue-600">{new Date(appointment.fecha).toLocaleDateString()}</h4>
+                  <h4 className="text-lg font-semibold text-blue-600">
+                    {new Date(appointment.fecha).toLocaleDateString()}
+                  </h4>
                   <p className="mt-1 text-gray-600"><strong>Hora:</strong> {appointment.hora}</p>
                   <p className="mt-1 text-gray-600"><strong>Descripción:</strong> {appointment.descripcion}</p>
-                  <button className="mt-2 bg-green-500 text-white rounded px-4 py-2" onClick={() => handleAssign(appointment.id)}>Asignar</button>
+                  <button
+                    className="mt-2 bg-green-500 text-white rounded px-4 py-2"
+                    onClick={() => handleAssign(appointment.id)}
+                  >
+                    Asignar
+                  </button>
                 </div>
               ))}
             </div>
@@ -151,7 +170,9 @@ const VerCitasDoctor = () => {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {citasFinalizadas.map((appointment) => (
                 <div key={appointment.id} className="bg-white shadow-md rounded-lg p-4">
-                  <h4 className="text-lg font-semibold text-blue-600">{new Date(appointment.fecha).toLocaleDateString()}</h4>
+                  <h4 className="text-lg font-semibold text-blue-600">
+                    {new Date(appointment.fecha).toLocaleDateString()}
+                  </h4>
                   <p className="mt-1 text-gray-600"><strong>Hora:</strong> {appointment.hora}</p>
                   <p className="mt-1 text-gray-600"><strong>Descripción:</strong> {appointment.descripcion}</p>
                   <p className="mt-1 text-gray-600"><strong>Estado:</strong> Finalizado</p>

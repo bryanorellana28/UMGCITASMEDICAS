@@ -24,12 +24,13 @@ model Calendario {
 }
 
 model Cita {
-  id            Int      @id @default(autoincrement())
-  email         String
-  fecha         DateTime
-  hora          String
-  descripcion   String
-  estado        String   // 'pendiente', 'confirmada', etc.
-  doctorAsignado String   @default("Pendiente de asignar") // Nuevo campo con valor por defecto
+  id             Int      @id @default(autoincrement())
+  email          String
+  fecha          DateTime
+  hora           String
+  descripcion    String
+  estado         String   // 'pendiente', 'confirmada', etc.
+  doctorAsignado String   @default("Pendiente de asignar")
+  nombre         String   @default("nombre")
 }
 

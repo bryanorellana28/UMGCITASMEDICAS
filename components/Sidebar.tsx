@@ -43,6 +43,15 @@ const Sidebar: React.FC<SidebarProps> = ({ userRole, email }) => {
         <ul className="space-y-3">
           {userRole === 'Paciente' && (
             <>
+             <li>
+                <button
+                  onClick={() => handleNavigation('/dashboard')}
+                  className="w-full flex items-center text-sm p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition duration-200"
+                >
+                  <span className="mr-3 text-gray-400">📅</span>
+                  Dashboard
+                </button>
+              </li>
               <li>
                 <button
                   onClick={() => handleNavigation('/assign-appointment')}
