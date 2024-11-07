@@ -31,6 +31,7 @@ model Cita {
   descripcion    String
   estado         String   // 'pendiente', 'confirmada', etc.
   doctorAsignado String   @default("Pendiente de asignar")
-  nombre         String   @default("nombre")
+  nombre         String   
+  revision         String    @default("Pendiente de revision")
 }
 

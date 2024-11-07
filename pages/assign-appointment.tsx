@@ -1,4 +1,3 @@
-// pages/assign-appointment.tsx
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Sidebar from '../components/Sidebar';
@@ -9,16 +8,22 @@ const AssignAppointment = () => {
   const [selectedHour, setSelectedHour] = useState<string>('');
   const [description, setDescription] = useState('');
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);  // Nuevo estado para nombre
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      console.log("Contenido del token:", decodedToken);
+      const extractedName = decodedToken.nombre; // Extraemos el nombre del token
+      console.log("Nombre extraído:", extractedName); // Verifica el valor
       setUserEmail(decodedToken.email);
+      setUserName(extractedName);  // Establece el nombre extraído
     }
   }, []);
 
+  // Obtener las horas disponibles para la cita según la fecha seleccionada
   const fetchAvailableHours = async (date: string) => {
     const response = await fetch('/api/available-hours', {
       method: 'POST',
@@ -46,6 +51,12 @@ const AssignAppointment = () => {
       return;
     }
 
+    if (!userName) {
+      alert('No se ha encontrado el nombre del usuario.');
+      return;
+    }
+
+    // Enviar nombre junto con los demás datos
     const response = await fetch('/api/assign-appointment', {
       method: 'POST',
       headers: {
@@ -53,6 +64,7 @@ const AssignAppointment = () => {
       },
       body: JSON.stringify({
         email: userEmail,
+        nombre: userName,  // Incluir nombre en la solicitud
         fecha: selectedDate,
         hora: selectedHour,
         descripcion: description,
@@ -71,10 +83,8 @@ const AssignAppointment = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
       <Sidebar userRole="Paciente" email={userEmail} />
 
-      {/* Contenido Principal */}
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Asignar Cita</h2>

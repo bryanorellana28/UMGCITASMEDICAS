@@ -65,9 +65,12 @@ const VerCitas = () => {
                   <h4 className="text-lg font-semibold text-blue-600">
                     {new Date(appointment.fecha).toLocaleDateString()}
                   </h4>
-                  <p className="mt-1 text-gray-600"><strong>Hora:</strong> {appointment.hora}</p>
+                  <p className="mt-1 text-gray-600"><strong>Doctor:</strong> {appointment.doctorAsignado}</p>
+                  <p className="mt-1 text-gray-600"><strong>Hora:</strong> {appointment.hora} horas</p>
                   <p className="mt-1 text-gray-600"><strong>Descripción:</strong> {appointment.descripcion}</p>
                   <p className="mt-1 text-gray-600"><strong>Estado:</strong> Asignado</p>
+                  
+                  
                 </div>
               ))}
             </div>
@@ -107,6 +110,8 @@ const VerCitas = () => {
                   <h4 className="text-lg font-semibold text-blue-600">
                     {new Date(appointment.fecha).toLocaleDateString()}
                   </h4>
+                  <p className="mt-1 text-gray-600"><strong>Doctor:</strong> {appointment.doctorAsignado}</p>
+
                   <p className="mt-1 text-gray-600"><strong>Hora:</strong> {appointment.hora}</p>
                   <p className="mt-1 text-gray-600"><strong>Descripción:</strong> {appointment.descripcion}</p>
                   <p className="mt-1 text-gray-600"><strong>Estado:</strong> Finalizado</p>
