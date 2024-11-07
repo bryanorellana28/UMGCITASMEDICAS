@@ -1,5 +1,5 @@
 // pages/api/appointments/[id].ts
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -25,20 +25,19 @@ const appointmentHandler = async (req: NextApiRequest, res: NextApiResponse) => 
       }
 
     case 'PUT':
-      const { estado, doctorAsignado } = req.body; // quitar 'fecha' si no es necesario
+      const { estado, doctorAsignado, resolucion } = req.body;
 
       // Validar datos entrantes
       if (!estado) {
         return res.status(400).json({ message: 'Estado es requerido' });
       }
 
-      if (estado === 'asignado' && !doctorAsignado) {
-        return res.status(400).json({ message: 'Doctor asignado es requerido' });
-      }
-
-      const updateData: any = { estado }; // No necesitamos re-asignar estado si ya lo tenemos
+      const updateData: any = { estado };
       if (doctorAsignado) {
-        updateData.doctorAsignado = doctorAsignado; // Solo asignar si está presente
+        updateData.doctorAsignado = doctorAsignado;
+      }
+      if (resolucion) {
+        updateData.revision = resolucion;
       }
 
       try {

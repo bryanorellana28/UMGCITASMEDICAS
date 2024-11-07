@@ -115,6 +115,8 @@ const VerCitas = () => {
                   <p className="mt-1 text-gray-600"><strong>Hora:</strong> {appointment.hora}</p>
                   <p className="mt-1 text-gray-600"><strong>Descripción:</strong> {appointment.descripcion}</p>
                   <p className="mt-1 text-gray-600"><strong>Estado:</strong> Finalizado</p>
+                  <p className="mt-1 text-gray-600"><strong>Diagnostico:</strong> {appointment.revision}</p>
+
                 </div>
               ))}
             </div>
