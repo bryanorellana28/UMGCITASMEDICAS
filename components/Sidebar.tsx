@@ -74,6 +74,13 @@ const Sidebar: React.FC<SidebarProps> = ({ userRole, email }) => {
           )}
           {userRole === 'Medico' && (
             <li>
+                <button
+                  onClick={() => handleNavigation('/dashboard')}
+                  className="w-full flex items-center text-sm p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition duration-200"
+                >
+                  <span className="mr-3 text-gray-400">📅</span>
+                  Dashboard
+                </button>
               <button
                 onClick={() => handleNavigation('/ver-citas-doctor')}
                 className="w-full flex items-center text-sm p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition duration-200"
@@ -81,6 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userRole, email }) => {
                 <span className="mr-3 text-gray-400">📋</span>
                 Ver Cita
               </button>
+            
             </li>
           )}
           {userRole === 'Administrador' && (

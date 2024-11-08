@@ -1,4 +1,4 @@
-// components/Login.tsx
+//borellana
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -10,7 +10,7 @@ const Login = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(''); // Limpiar errores anteriores
+    setError(''); 
 
     const response = await fetch('/api/login', {
       method: 'POST',
@@ -22,8 +22,8 @@ const Login = () => {
 
     if (response.ok) {
       const { token } = await response.json();
-      localStorage.setItem('token', token); // Almacenar el token en localStorage
-      router.push('/dashboard'); // Redirigir al dashboard
+      localStorage.setItem('token', token); // para implementar el jwt vamos a agregar en el ls el token
+      router.push('/dashboard'); 
     } else {
       const errorData = await response.json();
       setError(errorData.message || 'Error al iniciar sesión'); // Establecer mensaje de error
